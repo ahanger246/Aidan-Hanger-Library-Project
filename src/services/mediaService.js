@@ -7,7 +7,7 @@ import {
 } from '../repositories/mediaRepo.js';
 
 export async function getAllMedia(options) {
-  return getAll();
+  return getAll(options);
 }
 
 export async function getMediaById(id) {

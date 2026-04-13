@@ -59,18 +59,14 @@ export const validateUpdateMedia = [
   ),
 
   body('title')
-    .exists({ values: 'falsy' })
-    .withMessage('Title is required')
-    .bail()
+    .optional()
     .trim()
     .escape()
     .isLength({ min: 3 })
     .withMessage('Title must be at least 3 characters'),
 
   body('author')
-    .exists({ values: 'falsy' })
-    .withMessage('Author name is required')
-    .bail()
+    .optional()
     .trim()
     .escape()
     .isString()
@@ -80,9 +76,7 @@ export const validateUpdateMedia = [
     .withMessage('Author name must be at least 3 characters'),
 
   body('genre')
-    .exists({ values: 'falsy' })
-    .withMessage('Genre is required')
-    .bail()
+    .optional()
     .trim()
     .escape()
     .isString()
