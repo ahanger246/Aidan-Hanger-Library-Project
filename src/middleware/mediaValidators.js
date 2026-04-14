@@ -96,7 +96,7 @@ export const validateMediaQuery = [
 
   query('order')
     .optional()
-    .isIn('asc', 'desc')
+    .isIn(['asc', 'desc'])
     .withMessage('order must be either asc or desc'),
 
   query('offset')

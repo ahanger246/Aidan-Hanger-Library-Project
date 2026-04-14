@@ -26,7 +26,7 @@ model Review {
   id Int @id @default(autoincrement())
   content String
   createdAt DateTime @default(now()) @map("created_at")
-  media Media  @relation(fields: [mediaId], references: [id])
+  media Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   mediaId Int @map("media_id")
 
   @@index([mediaId])
