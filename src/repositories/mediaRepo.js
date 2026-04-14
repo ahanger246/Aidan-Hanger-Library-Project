@@ -6,7 +6,8 @@ export async function getAll({search, sortBy, order, offset, limit}) {
       conditions.OR = [
         {title: {contains: search, mode: 'insensitive'}},
         {author: {contains: search, mode: 'insensitive'}},
-        {genre: {contains: search, mode: 'insensitive'}}
+        {genre: {contains: search, mode: 'insensitive'}},
+        {format: {contains: search, mode: 'insensitive'}}
       ];
     }
 
@@ -24,9 +25,19 @@ export async function getById(id) {
   return media;
 }
 
-export function create(mediaData) {
-  let newMedia = prisma.media.create({ data: mediaData });
-  return newMedia;
+export async function create(mediaData) {
+  try {
+    const newMedia = await prisma.media.create({ data: mediaData });
+    return newMedia;
+  } catch(error) {
+    if(error.code === 'P2002') {
+      const err = new Error('Entry already exists for this title');
+      err.status = 409;
+      throw err;
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function update(id, updatedData) {

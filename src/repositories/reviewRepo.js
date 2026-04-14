@@ -1,7 +1,6 @@
 import prisma from '../config/db.js';
 
 export async function getAll({mediaId, search, sortBy, order, offset, limit}) {
-  console.log('repo');
   let conditions = {};
 
   if(mediaId && !search) {

@@ -45,6 +45,18 @@ export const validateCreateMedia = [
     .isLength({ min: 3})
     .withMessage('Genre must be at least 3 characters'),
 
+    body('format')
+    .exists({ values: 'falsy' })
+    .withMessage('Format is required')
+    .bail()
+    .trim()
+    .escape()
+    .isString()
+    .withMessage('Format must be a string')
+    .bail()
+    .isLength({ min: 3})
+    .withMessage('Format must be at least 3 characters'),
+
   handleValidationErrors,
 ];
 
@@ -54,6 +66,7 @@ export const validateUpdateMedia = [
       body('title').exists({ values: 'falsy' }),
       body('author').exists({ values: 'falsy' }),
       body('genre').exists({ values: 'falsy' }),
+      body('format').exists({ values: 'falsy' }),
     ],
     { message: 'At least one field (title, author, genre) must be provided' },
   ),

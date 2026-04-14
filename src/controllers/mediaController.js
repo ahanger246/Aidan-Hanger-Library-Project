@@ -33,8 +33,8 @@ export async function getMediaByIdHandler(req, res) {
 }
 
 export async function createMediaHandler(req, res) {
-  const {title, author, genre} = req.body;
-  const newMedia = await createMedia({ title, author, genre });
+  const {title, author, genre, format} = req.body;
+  const newMedia = await createMedia({ title, author, genre, format });
   res.status(201).json(newMedia);
 }
 

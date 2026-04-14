@@ -14,9 +14,10 @@ datasource db {
 
 model Media {
   id Int @id @default(autoincrement())
-  title String
+  title String @unique
   author String
   genre String
+  format String
   reviews Review[]
 
   @@map("media")
@@ -28,7 +29,52 @@ model Review {
   createdAt DateTime @default(now()) @map("created_at")
   media Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   mediaId Int @map("media_id")
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int @map("author_id")
 
-  @@index([mediaId])
   @@map("review")
 }
+
+model Loan {
+  id Int @id @default(autoincrement())
+  status Status @default(LOANED)
+  borrowedAt DateTime @default(now()) @map("borrowed_at")
+  dueAt DateTime
+  borrower User @relation(fields: [borrowerId], references: [id], onDelete: Cascade)
+  borrowerId Int @map("borrower_id")
+
+  @@map("loans")
+}
+
+enum Status {
+  LOANED
+  RETURNED
+}
+
+model Subscription {
+  id Int @id @default(autoincrement())
+  title String
+  startedAt DateTime @default(now()) @map("started_at")
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId Int @map("owner_id")
+
+  @@map("subscriptions")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  role Role @default(USER)
+  loans Loan[]
+  reviews Review[]
+  subscriptions Subscription[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
