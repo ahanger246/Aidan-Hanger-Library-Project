@@ -64,7 +64,7 @@ export async function getUserLoans(id) {
   return await prisma.loan.findMany({ where: {borrowerId: id} });
 }
 
-export async function getUSerSubs(id) {
+export async function getUserSubs(id) {
   return await prisma.subscription.findMany({ where: {ownerId: id} });
 }
 

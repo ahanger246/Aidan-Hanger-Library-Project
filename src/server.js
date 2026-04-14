@@ -1,7 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import mediaRoutes from './routes/mediaRoutes.js';
-import reviewRoutes from './routes/reviewRoutes.js'
+import reviewRoutes from './routes/reviewRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,7 @@ if(process.env.NODE_ENV !== 'test') app.use(morgan('tiny'));
 
 app.use('/api/media', mediaRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/user', userRoutes);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
