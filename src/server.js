@@ -4,6 +4,7 @@ import mediaRoutes from './routes/mediaRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import loanRoutes from './routes/loanRoutes.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.use('/api/media', mediaRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/loans', loanRoutes);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

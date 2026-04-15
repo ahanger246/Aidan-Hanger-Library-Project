@@ -28,7 +28,6 @@ export async function updateReview(id, updatedData) {
   const updatedReview = await update(id, updatedData);
   if(updatedReview) return updatedReview;
   else {
-    console.log('here');
     const error = new Error(`Review ${id} not found`);
     error.status = 404;
     throw error;

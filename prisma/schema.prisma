@@ -19,6 +19,7 @@ model Media {
   genre String
   format String
   reviews Review[]
+  loans Loan[]
 
   @@map("media")
 }
@@ -39,7 +40,9 @@ model Loan {
   id Int @id @default(autoincrement())
   status Status @default(LOANED)
   borrowedAt DateTime @default(now()) @map("borrowed_at")
-  dueAt DateTime
+  dueAt DateTime @map("due_at")
+  media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId Int @map("media_id")
   borrower User @relation(fields: [borrowerId], references: [id], onDelete: Cascade)
   borrowerId Int @map("borrower_id")
 
