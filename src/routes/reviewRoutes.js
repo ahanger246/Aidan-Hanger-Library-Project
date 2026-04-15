@@ -14,11 +14,25 @@ import {
   validateReviewQuery 
 } from '../middleware/reviewValidators.js';
 
+import { authenticate } from '../middleware/authenticate.js';
+import { authorizeReviewOwnership } from '../middleware/authorizeOwnership.js';
+
 const router = express.Router();
 router.get('/', validateReviewQuery, getAllReviewsHandler);
 router.get('/:id', validateId, getReviewByIdHandler);
-router.post('/', validateCreateReview, createReviewHandler);
-router.put('/:id', validateId, validateUpdateReview, updateReviewHandler);
-router.delete('/:id', validateId, deleteReviewHandler);
+router.post('/', authenticate, validateCreateReview, createReviewHandler);
+router.put(
+  '/:id', 
+  authenticate, 
+  validateId,
+  authorizeReviewOwnership,  
+  validateUpdateReview, 
+  updateReviewHandler);
+router.delete(
+  '/:id', 
+  authenticate, 
+  validateId, 
+  authorizeReviewOwnership, 
+  deleteReviewHandler);
 
 export default router;

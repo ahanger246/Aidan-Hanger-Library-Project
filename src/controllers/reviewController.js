@@ -36,7 +36,7 @@ export async function getReviewByIdHandler(req, res) {
 
 export async function createReviewHandler(req, res) {
   const { mediaId, content } = req.body;
-  const newReview = await createReview({ mediaId, content });
+  const newReview = await createReview({ mediaId, content, authorId: req.user.id });
   res.status(201).json(newReview);
 }
 

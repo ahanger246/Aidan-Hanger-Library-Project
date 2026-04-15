@@ -22,8 +22,8 @@ export async function findUserByIdHandler(req, res) {
 
 export async function getUserUpdateHandler(req, res) {
   const id = parseInt(req.user.id);
-  const { email, password } = req.body;
-  const updatedUser = await getUserUpdate(id, {email, password});
+  const { name, email, password } = req.body;
+  const updatedUser = await getUserUpdate(id, {name, email, password});
   res.status(200).json(updatedUser);
 }
 
@@ -48,7 +48,7 @@ export async function findUserSubsHandler(req, res) {
 export async function findUserReviewsHandler(req, res) {
   const id = parseInt(req.user.id);
   const userReviews = await findUserReviews(id);
-  res.status(204).json(userReviews);
+  res.status(200).json(userReviews);
 }
 
 export async function getRoleUpdateHandler(req, res) {

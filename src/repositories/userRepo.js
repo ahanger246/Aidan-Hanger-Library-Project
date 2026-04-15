@@ -24,7 +24,7 @@ export async function getAllUsers() {
 }
 
 export async function getUserById(id) {
-  return await prisma.user.findUnique({ where: {id} });
+  return await prisma.user.findUnique({ where: {id}, omit: {password: true} });
 }
 
 export async function getUserByEmail(email) {
@@ -69,6 +69,7 @@ export async function getUserSubs(id) {
 }
 
 export async function getUserReviews(id) {
+  console.log(id);
   return await prisma.review.findMany({ where: {authorId: id} });
 }
 
