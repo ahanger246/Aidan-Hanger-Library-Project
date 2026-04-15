@@ -1,14 +1,22 @@
-import { body, oneof } from 'express-validator';
+import { body, oneOf } from 'express-validator';
 import { handleValidationErrors } from './handleValidationErrors.js';
 
 export const validateUpdateUser = [
   oneOf(
     [
+      body('name').exists({ values: 'falsy' }),
       body('email').exists({ values: 'falsy' }),
       body('password').exists({ values: 'falsy' })
     ],
     { message: 'At least one field (email, password) must be provided' },
   ),
+
+  body('name')
+    .optional()
+    .trim()
+    .escape()
+    .isString()
+    .withMessage("Email must be a string"),  
 
   body('email')
     .optional()
