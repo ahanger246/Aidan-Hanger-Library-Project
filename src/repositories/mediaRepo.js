@@ -64,3 +64,11 @@ export async function remove(id) {
     throw error;
   }
 }
+
+export async function getMediaLoans(id) {
+  return await prisma.loan.findMany({ where: {mediaId: id} });
+}
+
+export async function getMediaReviews(id) {
+  return await prisma.review.findMany({ where: {mediaId: id} })
+}

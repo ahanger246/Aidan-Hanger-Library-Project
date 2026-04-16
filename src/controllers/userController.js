@@ -36,7 +36,7 @@ export async function getDeletedUserHandler(req, res) {
 export async function findUserLoansHandler(req, res) {
   const id = parseInt(req.user.id);
   const userLoans = await findUserLoans(id);
-  res.status(204).json(userLoans);
+  res.status(200).json(userLoans);
 }
 
 export async function findUserSubsHandler(req, res) {

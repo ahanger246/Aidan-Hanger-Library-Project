@@ -3,7 +3,9 @@ import {
   getById,
   create,
   update,
-  remove 
+  remove,
+  getMediaLoans,
+  getMediaReviews
 } from '../repositories/mediaRepo.js';
 
 export async function getAllMedia(options) {
@@ -42,4 +44,12 @@ export async function deleteMedia(id) {
     error.status = 404;
     throw error;
   }
+}
+
+export async function findMediaLoans(id) {
+  return await getMediaLoans(id);
+}
+
+export async function findMediaReviews(id) {
+  return await getMediaReviews(id);
 }

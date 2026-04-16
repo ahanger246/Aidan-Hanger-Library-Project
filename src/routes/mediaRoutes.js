@@ -4,7 +4,9 @@ import {
   getMediaByIdHandler,
   createMediaHandler,
   updateMediaHandler,
-  deleteMediaHandler
+  deleteMediaHandler,
+  findMediaLoansHandler,
+  findMediaReviewsHandler
 } from '../controllers/mediaController.js';
 
 import { 
@@ -23,5 +25,7 @@ router.get('/:id', authenticate, validateId, getMediaByIdHandler);
 router.post('/', authenticate, authorizeRoles("ADMIN"), validateCreateMedia, createMediaHandler);
 router.put('/:id', authenticate, authorizeRoles("ADMIN"), validateId, validateUpdateMedia, updateMediaHandler);
 router.delete('/:id', authenticate, authorizeRoles("ADMIN"), validateId, deleteMediaHandler);
+router.get('/:id/loans', authenticate, validateId, findMediaLoansHandler);
+router.get('/:id/reviews', authenticate, validateId, findMediaReviewsHandler);
 
 export default router;

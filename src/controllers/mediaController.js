@@ -3,7 +3,9 @@ import {
   getMediaById,
   createMedia,
   updateMedia,
-  deleteMedia
+  deleteMedia,
+  findMediaLoans,
+  findMediaReviews
 } from '../services/mediaService.js';
 
 export async function getAllMediaHandler(req, res) {
@@ -49,4 +51,16 @@ export async function deleteMediaHandler(req, res) {
   const id = parseInt(req.params.id);
   await deleteMedia(id);
   res.status(204).send();
+}
+
+export async function findMediaLoansHandler(req, res) {
+  const id = parseInt(req.params.id);
+  const mediaLoans = await findMediaLoans(id);
+  res.status(200).json(mediaLoans);
+}
+
+export async function findMediaReviewsHandler(req, res) {
+  const id = parseInt(req.params.id);
+  const mediaReviews = await findMediaReviews(id);
+  res.status(200).json(mediaReviews);
 }
