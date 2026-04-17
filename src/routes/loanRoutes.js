@@ -20,8 +20,8 @@ import { authorizeLoanOwnership } from '../middleware/authorizeOwnership.js';
 import { authorizeRoles } from '../middleware/authorizeRoles.js';
 
 const router = express.Router();
-router.get('/', validateLoanQuery, getAllLoansHandler);
-router.get('/:id', validateId, getLoanByIdHandler);
+router.get('/', authenticate, validateLoanQuery, getAllLoansHandler);
+router.get('/:id', authenticate, validateId, getLoanByIdHandler);
 router.post('/', authenticate, validateCreateLoan, createLoanHandler);
 router.put(
   '/:id', 

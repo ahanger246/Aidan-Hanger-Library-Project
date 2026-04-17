@@ -18,8 +18,8 @@ import { authenticate } from '../middleware/authenticate.js';
 import { authorizeReviewOwnership } from '../middleware/authorizeOwnership.js';
 
 const router = express.Router();
-router.get('/', validateReviewQuery, getAllReviewsHandler);
-router.get('/:id', validateId, getReviewByIdHandler);
+router.get('/', authenticate, validateReviewQuery, getAllReviewsHandler);
+router.get('/:id', authenticate, validateId, getReviewByIdHandler);
 router.post('/', authenticate, validateCreateReview, createReviewHandler);
 router.put(
   '/:id', 

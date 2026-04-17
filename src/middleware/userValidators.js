@@ -35,8 +35,11 @@ export const validateSignUp = [
 
 export const validateLogIn = [
   body('email')
+    .trim()
     .exists({values: 'falsy'})
-    .withMessage('Email is required'),
+    .withMessage('Email is required')
+    .bail()
+    .normalizeEmail(),
 
   body('password')
     .exists({values: 'falsy'})

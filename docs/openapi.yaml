@@ -1,0 +1,396 @@
+openapi: 3.0.3
+
+info:
+  title: Library API
+  version: 1.0.0
+  description: API documentation for the Library API
+
+servers: 
+  - url: http://localhost:8080/api
+
+tags:
+  - name: User
+    description: Operations related to user account actions
+
+  - name: Auth
+    description: Operations related to user authentication
+
+  - name: Media
+    description: Operations related to available library media
+
+  - name: Loans
+    description: Operations related to library loans
+
+  - name: Reviews
+    description: Operations related to media reviews
+  
+  - name: Subscriptions
+    description: Operations related to user subscriptions
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Create User
+      description: Create a new user account
+      requestBody:
+        description: Credentials for new user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  example: 'John Smith'
+                email:
+                  type: string
+                  example: 'person@example.com'
+                password:
+                  type: string
+                  example: 'password1234'
+
+      responses:
+        '201':
+          description: New user created
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetails'
+
+        '400':
+          $ref: '#/components/responses/InvalidUserInput'
+
+        '409':
+          $ref: '#/components/responses/DuplicateEmail'     
+
+  /auth/login:
+    post:
+      tags: 
+        - Auth
+      summary: Log in
+      description: Log in to an existing user account
+      requestBody: 
+        description: Log in credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCredentials'
+      responses:
+        '201':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                example:
+                  accessToken: 'eyJhbGciOiJIUzI1NiI...'
+        
+        '400':
+          $ref: '#/components/responses/InvalidUserInput'
+
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example: 'Invalid Credentials'
+
+
+
+components:
+  schemas:
+    AuthCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'person@example.com'
+        password:
+          type: string
+          example: 'password1234'
+
+    AccountDetails:
+      type: object
+      properties:
+        id: 
+          type: integer
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: 'John Smith'
+        email:
+          type: string
+          example: 'person@example.com'
+        role:
+          enum: [USER, ADMIN]
+          type: string
+          example: USER
+    
+    Media:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        title:
+          type: string
+          example: 'A Tale of Two Cities'
+        author:
+          type: string
+          example: 'Charles Dickens'
+        genre:
+          type: string
+          example: 'Historical Fiction'
+        format:
+          type: string
+          example: 'Book'
+
+    Loan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        status:
+          enum: [LOANED, RETURNED]
+          type: string
+          example: LOANED
+        borrowedAt:
+          type: string
+          readOnly: true
+          example: '2026-04-15T23:11:22.221Z'
+        dueAt:
+          type: string
+          example: '2026-05-13T23:24:35.718Z'
+        mediaId:
+          type: integer
+          readOnly: true
+          example: 1
+        borrowerId:
+          type: integer
+          readOnly: true
+          example: 1
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        content:
+          type: string
+          example: 'Best book ever'
+        createdAt:
+          type: string
+          readOnly: true
+          example: '2026-04-15T23:43:43.373Z'
+        mediaId:
+          type: integer
+          readOnly: true
+          example: 1
+        authorId:
+          type: integer
+          readOnly: true
+          example: 1
+    
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        title:
+          type: string
+          example: 'Libby'
+        startedAt:
+          type: string
+          readOnly: true
+          example: '2026-04-16T00:31:01.625Z'
+        ownerId:
+          type: integer
+          readOnly: true
+          example: 1
+
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Resource ID
+      schema:
+        type: integer
+        example: 1
+
+    Search:
+      name: search
+      in: query
+      required: false
+      description: Filter by keyword
+      schema: 
+        type: string
+        example: example
+
+    SortBy:
+      name: sortBy
+      in: query
+      required: false
+      description: Sort results by field
+      schema:
+        type: string
+        example: title
+
+    Order:
+      name: order
+      in: query
+      required: false
+      description: Sort results in specified order
+      schema:
+        enum: [asc, desc]
+        type: string
+        example: desc
+      
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Number of entries to skip
+      schema: 
+        type: integer
+        example: 0
+
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of entries to display
+      schema:
+        type: integer
+        example: 5
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example: 'Resource 1 not found'
+
+    InvalidId:
+      description: Invalid ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            example: 
+              errors: ['ID must be a positive integer']
+
+    InvalidMediaOrSubInput:
+      description: Bad Request due to invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            example:
+              errors: ['Title must be at least 3 characters']
+
+    Unauthenticated:
+      description: Client is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example: 'Not authenticated.  Please provide a valid token'
+
+    InvalidUserInput:
+      description: Bad request due to invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            example: 
+              errors:
+                - 'Email is required'
+                - 'Password is required'
+    
+    DuplicateEmail:
+      description: Email has already been used
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example:
+              error: 'Email has already been used.'
+
+    Forbidden:
+      description: Client is not authorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            example:
+              error: 'Forbidden: Insufficient Permission'
+
+    InvalidLoanOrReviewInput:
+      description: Bad request due to invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+            example: 
+              errors:
+                - 'mediaId is required'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
