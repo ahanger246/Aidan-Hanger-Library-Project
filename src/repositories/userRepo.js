@@ -20,7 +20,7 @@ export async function createUser(data) {
 }
 
 export async function getAllUsers() {
-  return await prisma.user.findMany({ omit: { password:true }})
+  return await prisma.user.findMany({ omit: { password: true }})
 }
 
 export async function getUserById(id) {

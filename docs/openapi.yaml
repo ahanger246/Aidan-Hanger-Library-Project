@@ -9,11 +9,11 @@ servers:
   - url: http://localhost:8080/api
 
 tags:
-  - name: User
-    description: Operations related to user account actions
-
   - name: Auth
     description: Operations related to user authentication
+
+  - name: User
+    description: Operations related to user account actions
 
   - name: Media
     description: Operations related to available library media
@@ -106,7 +106,590 @@ paths:
                     type: string
                 example: 'Invalid Credentials'
 
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: View all users
+      description: Retrieve a list of all users
+      
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetails'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
+  /users/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Retrieve user account
+      description: Retrieve account details for the current user, without the password
+
+      responses:
+        '200':
+          description: User account details
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetails'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Edit user account
+      description: Edit name, email, and/or password for user's account
+      requestBody:
+        description: The updated content.  At least one updated field is required
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 'John A. Smith'
+                email:
+                  type: string
+                  example: 'updatedEmail@example.com'
+                password:
+                  type: string
+                  example: 'updatedPassword1234'
+      responses:
+        '200':
+          description: User account updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: 'John A. Smith'
+                  email:
+                    type: string
+                    example: 'updatedEmail@example.com'
+                  role:
+                    enum: [USER, ADMIN]
+                    type: string
+                    example: USER
+        '400':
+          $ref: '#/components/responses/InvalidUserInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '409':
+          $ref: '#/components/responses/DuplicateEmail'
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Delete user
+      description: Delete user account and all associated loans, subscriptions, and reviews
+      
+      responses:
+        '204':
+          description: 'User deleted successfully'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        
+        
+      deprecated: false
+
+  /users/me/loans:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Retrieve user loans
+      description: Retrieve loans listed under user's account
+
+      responses:
+        '200':
+          description: A list of user's loans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /users/me/subscriptions:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+        - User
+      summary: Retrieve user subscriptions
+      description: Retrieve subscriptions listed under user's account
+
+      responses:
+        '200':
+          description: A list of user's subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /users/me/reviews:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Retrieve user reviews
+      description: Retrieve all reviews the user has written
+
+      responses:
+        '200':
+          description: A list of user reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /media:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Get all media
+      description: View all media in database
+      parameters:
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+
+      responses:
+        '200':
+          description: A list of media
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Create media
+      description: Create a new media entry.  Only an admin can do this.
+      requestBody:
+        description: The information for the new media entry
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                title:
+                  type: string
+                  example: 'A Tale of Two Cities'
+                author:
+                  type: string
+                  example: 'Charles Dickens'
+                genre:
+                  type: string
+                  example: 'Historical Fiction'
+                format:
+                  type: string
+                  example: 'Book'
+      
+      responses:
+        '201': 
+          description: Media entry successfully created
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Media' 
+        '400':
+          $ref: '#/components/responses/InvalidMediaOrSubInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+
+  /loans:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+        - Loans
+      summary: Get all loans
+      description: View all loans in database
+      parameters:
+        - $ref: '#/components/parameters/MediaId'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+
+      responses:
+        '200':
+          description: A list of loans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+    
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Loans
+      summary: Create a loan
+      description: Create a new loan under user's account
+      requestBody:
+        description: The ID of the media being loaned
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mediaId:
+                  type: integer
+                  example: 1
+      
+      responses:
+        '201':
+          description: Loan successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/InvalidLoanOrReviewInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+  /loans/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Loans
+      summary: Retrieve a loan
+      description: Retrieve a specific loan by its ID
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: A single loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Loans
+      summary: Update a loan
+      description: Update a loan's due date.  Only an admin can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        description: 'Number of weeks extension'
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dueAt:
+                  type: integer
+                  example: 2
+      
+      responses:
+        '200':
+          description: Loan updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Loans
+      summary: Delete a loan
+      description: Completely delete a loan entry using its ID.  Only an admin can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '204':
+          description: Loan deleted successfully
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Loans
+      summary: Return a loan
+      description: Change a loan's status from "LOANED" to "RETURNED"
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: Loan status updated successfully
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  status:
+                    enum: [LOANED, RETURNED]
+                    type: string
+                    example: RETURNED
+                  borrowedAt:
+                    type: string
+                    readOnly: true
+                    example: '2026-04-15T23:11:22.221Z'
+                  dueAt:
+                    type: string
+                    example: '2026-05-13T23:24:35.718Z'
+                  mediaId:
+                    type: integer
+                    readOnly: true
+                    example: 1
+                  borrowerId:
+                    type: integer
+                    readOnly: true
+                    example: 1
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      
+  /subscription:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subscriptions
+      summary: View subscriptions
+      description: View all active subscriptions.  Only an admin can do this.
+      parameters:
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+
+      responses:
+        '200':
+          description: A list of subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subscriptions
+      summary: Create subscription
+      description: Create a new subscription under a user's account
+      requestBody:
+        description: Name of the subscription
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Libby'
+      responses:
+        '200':
+          description: Subscription successfully created
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/InvalidMediaOrSubInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /subscription/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subscriptions
+      summary: Retrieve a subscription
+      description: Retrieve a specific loan by its ID.  Only an admin can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200': 
+          description: A single subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      security:
+        - bearerAuth: []
+      tags: 
+        - Subscriptions
+      summary: Update a subscription
+      description: Update a subscription's title
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        description: 'Subscription title'
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Libby'
+      
+      responses:
+        '200':
+          description: Subscription updated successfully
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/InvalidMediaOrSubInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subscriptions
+      summary: Delete a subscription
+      description: Delete a subscription the user owns by its ID
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '204':
+          description: Subscription deleted successfully
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      
+      
 
 components:
   schemas:
@@ -234,6 +817,15 @@ components:
       required: true
       description: Resource ID
       schema:
+        type: integer
+        example: 1
+    
+    MediaId:
+      name: mediaId
+      in: query
+      required: false
+      description: ID of related media
+      schema: 
         type: integer
         example: 1
 
