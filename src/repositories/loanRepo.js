@@ -47,9 +47,12 @@ export async function create(data) {
 
 export async function update(id, updatedData) {
   try {
+    let loan = await prisma.loan.findUnique({ where: {id} });
+    let newDueDate = new Date(loan.dueAt.toISOString().split('T')[0]);
+    newDueDate.setDate(newDueDate.getDate() + updatedData.extension * 7);
     let updatedLoan = await prisma.loan.update({
       where: {id},
-      data: updatedData
+      data: {dueAt: newDueDate}
     });
     return updatedLoan;
   } catch(error) {

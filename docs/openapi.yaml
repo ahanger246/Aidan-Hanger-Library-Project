@@ -80,7 +80,7 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthCredentials'
       responses:
-        '201':
+        '200':
           description: Authentication successful
           content:
             application/json:
@@ -113,7 +113,7 @@ paths:
       tags:
         - User
       summary: View all users
-      description: Retrieve a list of all users
+      description: Retrieve a list of all users.  Only admins can do this.
       
       responses:
         '200':
@@ -135,7 +135,7 @@ paths:
         - bearerAuth: []
       tags:
         - User
-      summary: Retrieve user account
+      summary: View user account
       description: Retrieve account details for the current user, without the password
 
       responses:
@@ -291,7 +291,6 @@ paths:
       description: View all media in database
       parameters:
         - $ref: '#/components/parameters/Search'
-        - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/SortBy'
         - $ref: '#/components/parameters/Order'
         - $ref: '#/components/parameters/Offset'
@@ -315,7 +314,7 @@ paths:
       tags:
         - Media
       summary: Create media
-      description: Create a new media entry.  Only an admin can do this.
+      description: Create a new media entry.  Only admins can do this.
       requestBody:
         description: The information for the new media entry
         required: true
@@ -351,6 +350,153 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
 
+  /media/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Media
+      summary: Retrieve single media
+      description: Retrieve a single media entry by its ID
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: A single media entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Update media
+      description: Update the details of a media entry by its ID.  Only admins can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        description: 'Updated media data'
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'A Tale of Two Cities'
+                author:
+                  type: string
+                  example: 'Charles Dickens'
+                genre:
+                  type: string
+                  example: 'Historical Fiction'
+                format:
+                  type: string
+                  example: 'Book'
+      
+      responses:
+        '200':
+          description: Media updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          $ref: '#/components/responses/InvalidMediaOrSubInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Delete a media entry
+      description: Delete a media entry by its ID.  Only an admin can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '204':
+          description: Media entry deleted successfully
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /media/{id}/loans:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Retrieve media's loans
+      description: Retrieve all loans of this piece of media by its ID.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: All loans for this media
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /media/{id}/reviews:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Media
+      summary: Retrieve media's reviews
+      description: Retrieve all reviews for this media entry by its ID.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: All reviews for this media
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /loans:
     get:
@@ -454,7 +600,7 @@ paths:
             schema:
               type: object
               properties:
-                dueAt:
+                extension:
                   type: integer
                   example: 2
       
@@ -536,6 +682,142 @@ paths:
                     type: integer
                     readOnly: true
                     example: 1
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      
+  /reviews:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+        - Reviews
+      summary: Get all reviews
+      description: Retrieve a list of all reviews in the database
+
+      responses:
+        '200':
+          description: A list of all reviews
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+    
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Create a review
+      description: Create a new review for a piece of media
+      requestBody:
+        description: Information for the review
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: 'Best book ever'
+                mediaId:
+                  type: integer
+                  example: 1
+
+      responses:
+        '200':
+          description: Review successfully created
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/InvalidLoanOrReviewInput'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reviews/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Get review by ID
+      description: Retrieve a review using its ID
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '200':
+          description: A single review
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/InvalidId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+          
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Update a review
+      description: Update a review the user has written
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        description: The new review content 
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: Updated content
+      
+      responses:
+        '200':
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Delete a review
+      description: Delete a review by its ID.  Only the review's owner can do this.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      
+      responses:
+        '204':
+          description: Review deleted successfully
         '400':
           $ref: '#/components/responses/InvalidId'
         '401':

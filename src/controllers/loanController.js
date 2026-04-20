@@ -46,9 +46,7 @@ export async function createLoanHandler(req, res) {
 export async function updateLoanHandler(req, res) {
   const id = parseInt(req.params.id);
   const { extension } = req.body;
-  const newDueDate = new Date();
-  newDueDate.setDate(newDueDate.getDate() + 21 + extension * 7);
-  const updatedLoan = await updateLoan(id, { dueAt: newDueDate });
+  const updatedLoan = await updateLoan(id, { extension });
   res.status(200).json(updatedLoan);
 }
 
