@@ -59,7 +59,7 @@ export const validateReviewQuery = [
   query('sortBy')
     .optional()
     .isIn(['id', 'mediaId', 'content', 'createdAt'])
-    .withMessage('sortBy must be one of: id, title, author, or genre'),
+    .withMessage('sortBy must be one of: id, mediaId, content, or createdAt'),
 
   query('order')
     .optional()

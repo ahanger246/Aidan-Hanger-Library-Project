@@ -41,8 +41,8 @@ export const validateLoanQuery = [
 
   query('sortBy')
     .optional()
-    .isIn(['id', 'mediaId', 'content', 'createdAt'])
-    .withMessage('sortBy must be one of: id, title, author, or genre'),
+    .isIn(['id', 'mediaId', 'borrowedAt', 'dueAt', 'borrowerId'])
+    .withMessage('sortBy must be one of: id, mediaId, borrowedAt, dueAt, or borrowerId'),
 
   query('order')
     .optional()

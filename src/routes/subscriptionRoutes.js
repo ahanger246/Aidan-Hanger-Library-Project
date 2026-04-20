@@ -10,7 +10,7 @@ import {
 import {
   validateId,
   validateSub,
-  validateReviewQuery
+  validateSubQuery
 } from '../middleware/subscriptionValidators.js';
 
 import { authenticate } from '../middleware/authenticate.js';
@@ -18,7 +18,7 @@ import { authorizeSubOwnership } from '../middleware/authorizeOwnership.js';
 import { authorizeRoles } from '../middleware/authorizeRoles.js';
 
 const router = express.Router();
-router.get('/', authenticate, authorizeRoles("ADMIN"), getAllSubsHandler);
+router.get('/', authenticate, validateSubQuery, authorizeRoles("ADMIN"), getAllSubsHandler);
 router.get('/:id', authenticate, validateId, authorizeRoles("ADMIN"), getSubByIdHandler);
 router.post('/', authenticate, validateSub, createSubHandler);
 router.put('/:id', authenticate, validateId, authorizeSubOwnership, validateSub, updateSubHandler);

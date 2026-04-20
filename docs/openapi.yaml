@@ -349,6 +349,8 @@ paths:
           $ref: '#/components/responses/Unauthenticated'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/DuplicateTitle'
 
   /media/{id}:
     get:
@@ -419,6 +421,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/DuplicateTitle'
     
     delete:
       security:
@@ -508,7 +512,6 @@ paths:
       description: View all loans in database
       parameters:
         - $ref: '#/components/parameters/MediaId'
-        - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/SortBy'
         - $ref: '#/components/parameters/Order'
         - $ref: '#/components/parameters/Offset'
@@ -648,7 +651,7 @@ paths:
       tags:
         - Loans
       summary: Return a loan
-      description: Change a loan's status from "LOANED" to "RETURNED"
+      description: Change the status of a user's loan from "LOANED" to "RETURNED"
       parameters:
         - $ref: '#/components/parameters/ResourceId'
       
@@ -699,6 +702,13 @@ paths:
         - Reviews
       summary: Get all reviews
       description: Retrieve a list of all reviews in the database
+      parameters:
+        - $ref: '#/components/parameters/MediaId'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
 
       responses:
         '200':
@@ -777,7 +787,7 @@ paths:
       tags:
         - Reviews
       summary: Update a review
-      description: Update a review the user has written
+      description: Update a review.  Only the review's author can do this.
       parameters:
         - $ref: '#/components/parameters/ResourceId'
       requestBody:
@@ -798,6 +808,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/InvalidId'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '403':
@@ -811,7 +823,7 @@ paths:
       tags:
         - Reviews
       summary: Delete a review
-      description: Delete a review by its ID.  Only the review's owner can do this.
+      description: Delete a review by its ID.  Only the review's author can do this.
       parameters:
         - $ref: '#/components/parameters/ResourceId'
       
@@ -827,7 +839,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       
-  /subscription:
+  /subscriptions:
     get:
       security:
         - bearerAuth: []
@@ -886,7 +898,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthenticated'
 
-  /subscription/{id}:
+  /subscriptions/{id}:
     get:
       security:
         - bearerAuth: []
@@ -919,7 +931,7 @@ paths:
       tags: 
         - Subscriptions
       summary: Update a subscription
-      description: Update a subscription's title
+      description: Update the name of a subscription owned by the user
       parameters:
         - $ref: '#/components/parameters/ResourceId'
       requestBody:
@@ -1127,7 +1139,7 @@ components:
       description: Sort results by field
       schema:
         type: string
-        example: title
+        example: id
 
     Order:
       name: order
@@ -1137,7 +1149,7 @@ components:
       schema:
         enum: [asc, desc]
         type: string
-        example: desc
+        example: asc
       
     Offset:
       name: offset
@@ -1262,6 +1274,18 @@ components:
             example: 
               errors:
                 - 'mediaId is required'
+
+    DuplicateTitle:
+      description: Title has already been used
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              error:
+                type: string
+            example:
+              error: 'Title has already been used.'
 
   securitySchemes:
     bearerAuth:

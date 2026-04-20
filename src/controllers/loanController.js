@@ -10,7 +10,6 @@ import {
 export async function getAllLoansHandler(req, res) {
   const {
     mediaId,
-    search = '',
     sortBy = 'id',
     order = 'asc',
     offset = 0,
@@ -18,8 +17,7 @@ export async function getAllLoansHandler(req, res) {
   } = req.query;
 
   const options = {
-    mediaId: mediaId ? parseInt(mediaId): undefined,
-    search, 
+    mediaId: mediaId ? parseInt(mediaId): undefined, 
     sortBy,
     order,
     offset: parseInt(offset),

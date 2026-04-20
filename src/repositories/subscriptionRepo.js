@@ -4,9 +4,7 @@ export async function getAll({search, sortBy, order, offset, limit}) {
   let conditions = {};
 
   if(search) {
-    conditions = [
-      {title: {contains: search, mode: 'insensitive'}}
-    ];
+    conditions = {title: {contains: search, mode: 'insensitive'}};
   }
 
   const subs = await prisma.subscription.findMany({

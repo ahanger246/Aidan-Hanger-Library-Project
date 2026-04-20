@@ -2,14 +2,15 @@ import prisma from '../config/db.js';
 
 export async function getAll({search, sortBy, order, offset, limit}) {
   let conditions = {};
-    if(search) {
-      conditions.OR = [
-        {title: {contains: search, mode: 'insensitive'}},
-        {author: {contains: search, mode: 'insensitive'}},
-        {genre: {contains: search, mode: 'insensitive'}},
-        {format: {contains: search, mode: 'insensitive'}}
-      ];
-    }
+    
+  if(search) {
+    conditions.OR = [
+      {title: {contains: search, mode: 'insensitive'}},
+      {author: {contains: search, mode: 'insensitive'}},
+      {genre: {contains: search, mode: 'insensitive'}},
+      {format: {contains: search, mode: 'insensitive'}}
+    ];
+  }
 
   const media = await prisma.media.findMany({
     where: conditions,
@@ -31,7 +32,7 @@ export async function create(mediaData) {
     return newMedia;
   } catch(error) {
     if(error.code === 'P2002') {
-      const err = new Error('Entry already exists for this title');
+      const err = new Error('Title has already been used');
       err.status = 409;
       throw err;
     } else {
@@ -49,6 +50,11 @@ export async function update(id, updatedData) {
     return updatedMedia;
   } catch (error) {
     if(error.code === 'P2025') return null;
+    if(error.code === 'P2002') {
+      const err = new Error('Title has already been used');
+      err.status = 409;
+      throw err;
+    } 
     throw error;
   }
 }

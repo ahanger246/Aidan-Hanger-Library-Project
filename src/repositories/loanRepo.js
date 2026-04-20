@@ -1,18 +1,11 @@
 import prisma from '../config/db.js';
 import { Status } from '../generated/prisma/index.js';
 
-export async function getAll({mediaId, search, sortBy, order, offset, limit}) {
+export async function getAll({mediaId, sortBy, order, offset, limit}) {
   let conditions = {};
 
-  if(mediaId && !search) {
+  if(mediaId) {
     conditions = { mediaId: {equals: mediaId} };
-  } else if(!mediaId && search) {
-    conditions = {content: {contains: search, mode: 'insensitive'}};
-  } else if(mediaId && search) {
-    conditions.AND = [
-      {mediaId: {equals: mediaId}},
-      {content: {contains: search, mode: 'insensitive'}}
-    ];
   }
 
   const loans = await prisma.loan.findMany({

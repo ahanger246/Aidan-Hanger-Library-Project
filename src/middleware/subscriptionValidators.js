@@ -27,11 +27,11 @@ export const validateSub = [
   handleValidationErrors
 ];
 
-export const validateReviewQuery = [
+export const validateSubQuery = [
   query('sortBy')
     .optional()
-    .isIn(['id', 'mediaId', 'content', 'createdAt'])
-    .withMessage('sortBy must be one of: id, title, author, or genre'),
+    .isIn(['id', 'title', 'startedAt', 'owner'])
+    .withMessage('sortBy must be one of: id, title, startedAt, or owner'),
 
   query('order')
     .optional()
