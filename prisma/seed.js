@@ -1,4 +1,5 @@
 import prisma from '../src/config/db.js';
+import bcrypt from 'bcrypt';
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
@@ -28,12 +29,16 @@ try {
 
   const userCount = await prisma.user.count();
   if(userCount === 0) {
+    p1 = await bcrypt.hash('green1234', 10);
+    p2 = await bcrypt.hash('william1234', 10);
+    p3 = await bcrypt.hash('smith1234', 10);
+    p4 = await bcrypt.hash('wu1234', 10);
     await prisma.user.createMany({
       data: [
-        {name: 'Sarah Green', email: 'sgreen@library.com', password: 'green1234', role: 'ADMIN'},
-        {name: 'Lionel William', email: 'lwilliam@library.com', password: 'william1234', role: 'ADMIN'},
-        {name: 'Sam Smith', email: 'ssmith@demo.com', password: 'smith1234', role: 'USER'},
-        {name: 'Jane Wu', email: 'jwu@demo.com', password: 'wu1234', role: 'USER'}
+        {name: 'Sarah Green', email: 'sgreen@library.com', password: p1, role: 'ADMIN'},
+        {name: 'Lionel William', email: 'lwilliam@library.com', password: p2, role: 'ADMIN'},
+        {name: 'Sam Smith', email: 'ssmith@demo.com', password: p3, role: 'USER'},
+        {name: 'Jane Wu', email: 'jwu@demo.com', password: p4, role: 'USER'}
       ]
     });
     console.log('Users seeded successfully');

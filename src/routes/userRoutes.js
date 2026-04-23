@@ -16,7 +16,7 @@ import { authorizeRoles } from '../middleware/authorizeRoles.js';
 
 const router = express.Router();
 router.get('/', authenticate, authorizeRoles('ADMIN'), findAllUsersHandler);
-router.get('/testViewUsers', findAllUsersHandler);
+router.get('/testViewUsers', findAllUsersHandler); // Remove this
 router.get('/me', authenticate, findUserByIdHandler);
 router.put('/me', authenticate, validateUpdateUser, getUserUpdateHandler);
 router.delete('/me', authenticate, getDeletedUserHandler);
