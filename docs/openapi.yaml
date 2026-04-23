@@ -7,6 +7,9 @@ info:
 
 servers: 
   - url: http://localhost:3000/api
+    description: Local development server
+  - url: https://aidan-hanger-library-project-api.onrender.com
+    description: Production server
 
 tags:
   - name: Auth
