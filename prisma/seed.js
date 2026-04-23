@@ -8,7 +8,7 @@ try {
     await prisma.$queryRaw`TRUNCATE media, users, loans, review, subscriptions RESTART IDENTITY CASCADE;`;
     console.log('Development: Library table truncated');
   }
-  const mediaCount = prisma.media.count();
+  const mediaCount = await prisma.media.count();
   if(mediaCount === 0) {
     await prisma.media.createMany({
       data: [
@@ -26,7 +26,7 @@ try {
   }
   
 
-  const userCount = prisma.user.count();
+  const userCount = await prisma.user.count();
   if(userCount === 0) {
     await prisma.user.createMany({
       data: [
@@ -42,7 +42,7 @@ try {
   }
   
 
-  const loanCount = prisma.loan.count();
+  const loanCount = await prisma.loan.count();
   if(loanCount === 0) {
     await prisma.loan.createMany({
       data: [
@@ -58,7 +58,7 @@ try {
   }
  
 
-  const reviewCount = prisma.review.count();
+  const reviewCount = await prisma.review.count();
   if(reviewCount === 0) {
     await prisma.review.createMany({
       data: [
@@ -73,7 +73,7 @@ try {
   }
   
 
-  const subCount = prisma.subscription.count();
+  const subCount = await prisma.subscription.count();
   if(subCount === 0) {
     await prisma.subscription.createMany({
       data: [
