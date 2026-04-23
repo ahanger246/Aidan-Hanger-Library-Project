@@ -3,8 +3,13 @@ import prisma from '../src/config/db.js';
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 try {
+  // Only truncate table in development mode
+  if(isDev) {
+    await prisma.$queryRaw`TRUNCATE media, users, loans, review, subscriptions RESTART IDENTITY CASCADE;`;
+    console.log('Development: Library table truncated');
+  }
   const mediaCount = prisma.media.count();
-  if(mediaCountCount === 0) {
+  if(mediaCount === 0) {
     await prisma.media.createMany({
       data: [
         {title: 'The Lord of the Rings', author: 'J.R.R. Tolkein', genre: 'Fantasy', format: 'Book'},
