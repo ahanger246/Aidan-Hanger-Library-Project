@@ -51,10 +51,10 @@ try {
   if(loanCount === 0) {
     await prisma.loan.createMany({
       data: [
-        {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 1, borrowerId: 2},
-        {status: 'RETURNED', borrowedAt: '2026-03-07T23:11:22.221Z', dueAt: '2026-03-28T23:11:22.221Z', mediaId: 3, borrowerId: 1},
-        {status: 'LOANED', borrowedAt: '2026-04-06T23:11:22.221Z', dueAt: '2026-04-24T23:11:22.221Z', mediaId: 5, borrowerId: 2},
-        {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 2, borrowerId: 1}
+        {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 1, borrowerId: 4},
+        {status: 'RETURNED', borrowedAt: '2026-03-07T23:11:22.221Z', dueAt: '2026-03-28T23:11:22.221Z', mediaId: 3, borrowerId: 3},
+        {status: 'LOANED', borrowedAt: '2026-04-06T23:11:22.221Z', dueAt: '2026-04-24T23:11:22.221Z', mediaId: 5, borrowerId: 4},
+        {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 2, borrowerId: 3}
       ]
     });
      console.log('Loans seeded successfully');
@@ -67,9 +67,9 @@ try {
   if(reviewCount === 0) {
     await prisma.review.createMany({
       data: [
-        {content: 'Foundational fantasy', createdAt: '2026-03-19T23:11:22.221Z', mediaId: 1, authorId: 2},
-        {content: 'Both scary and thoughful', createdAt: '2026-04-19T23:11:22.221Z', mediaId: 3, authorId: 1},
-        {content: 'Classic platformer', createdAt: '2026-04-23T23:11:22.221Z', mediaId: 5, authorId: 2}
+        {content: 'Foundational fantasy', createdAt: '2026-03-19T23:11:22.221Z', mediaId: 1, authorId: 4},
+        {content: 'Both scary and thoughful', createdAt: '2026-04-19T23:11:22.221Z', mediaId: 3, authorId: 3},
+        {content: 'Classic platformer', createdAt: '2026-04-23T23:11:22.221Z', mediaId: 5, authorId: 4}
       ]
     });
     console.log('Reviews seeded successfully');
@@ -82,9 +82,9 @@ try {
   if(subCount === 0) {
     await prisma.subscription.createMany({
       data: [
-        {title: 'Libby', startedAt: '2026-03-21T23:11:22.221Z', ownerId: 1},
-        {title: 'Hoopla', startedAt: '2026-04-12T23:11:22.221Z', ownerId: 1},
-        {title: 'Libby', startedAt: '2026-03-09T23:11:22.221Z', ownerId: 2}
+        {title: 'Libby', startedAt: '2026-03-21T23:11:22.221Z', ownerId: 3},
+        {title: 'Hoopla', startedAt: '2026-04-12T23:11:22.221Z', ownerId: 3},
+        {title: 'Libby', startedAt: '2026-03-09T23:11:22.221Z', ownerId: 4}
       ]
     });
     console.log('Subscriptions seeded successfully');
