@@ -31,6 +31,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/subscriptions', subRoutes);
+app.get('/health', (req, res) => {
+  res.status(200).json({status: 'ok'});
+});
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
