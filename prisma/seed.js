@@ -29,10 +29,10 @@ try {
 
   const userCount = await prisma.user.count();
   if(userCount === 0) {
-    p1 = await bcrypt.hash('green1234', 10);
-    p2 = await bcrypt.hash('william1234', 10);
-    p3 = await bcrypt.hash('smith1234', 10);
-    p4 = await bcrypt.hash('wu1234', 10);
+    let p1 = await bcrypt.hash('green1234', 10);
+    let p2 = await bcrypt.hash('william1234', 10);
+    let p3 = await bcrypt.hash('smith1234', 10);
+    let p4 = await bcrypt.hash('wu1234', 10);
     await prisma.user.createMany({
       data: [
         {name: 'Sarah Green', email: 'sgreen@library.com', password: p1, role: 'ADMIN'},
