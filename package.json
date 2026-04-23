@@ -5,9 +5,21 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --env-file=.env --watch src/server.js"
+    "dev": "node --env-file=.env --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy",
+    "seed:dev": "node --env-file=.env prisma/seed.js",
+    "seed:prod": "node prisma/seed.js"
   },
-  "keywords": [],
+  "keywords": [
+    "node",
+    "express",
+    "prisma",
+    "postgres",
+    "api",
+    "library"
+  ],
   "author": "Aidan Hanger",
   "license": "ISC",
   "type": "module",
