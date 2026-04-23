@@ -48,7 +48,7 @@ try {
       data: [
         {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 1, borrowerId: 2},
         {status: 'RETURNED', borrowedAt: '2026-03-07T23:11:22.221Z', dueAt: '2026-03-28T23:11:22.221Z', mediaId: 3, borrowerId: 1},
-        {status: 'LOANED', borrowedAt: '2026-04-06T23:11:22.221Z', dueAt: '2026-04-24T23:11:22.221Z', mediaId: 7, borrowerId: 2},
+        {status: 'LOANED', borrowedAt: '2026-04-06T23:11:22.221Z', dueAt: '2026-04-24T23:11:22.221Z', mediaId: 6, borrowerId: 2},
         {status: 'LOANED', borrowedAt: '2026-04-15T23:11:22.221Z', dueAt: '2026-05-06T23:11:22.221Z', mediaId: 2, borrowerId: 1}
       ]
     });
