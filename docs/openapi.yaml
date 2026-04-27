@@ -886,7 +886,7 @@ paths:
               properties:
                 title:
                   type: string
-                  example: 'Libby'
+                  example: 'Hoopla'
       responses:
         '200':
           description: Subscription successfully created
