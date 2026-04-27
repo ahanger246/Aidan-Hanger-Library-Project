@@ -27,8 +27,8 @@ export const validateUpdateLoan = [
     .exists({values: 'falsy'})
     .withMessage('extension is required')
     .bail()
-    .isInt()
-    .withMessage('Extension must be an int'),
+    .isInt({ min: 1 })
+    .withMessage('Extension must be a positive integer'),
 
   handleValidationErrors
 ];
