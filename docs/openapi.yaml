@@ -1131,7 +1131,6 @@ components:
       description: Filter by keyword
       schema: 
         type: string
-        example: example
 
     SortBy:
       name: sortBy
