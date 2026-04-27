@@ -1179,7 +1179,7 @@ components:
             example: 'Resource 1 not found'
 
     InvalidId:
-      description: Invalid ID
+      description: Bad Request
       content:
         application/json:
           schema:
