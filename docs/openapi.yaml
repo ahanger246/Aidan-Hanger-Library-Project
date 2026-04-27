@@ -1122,7 +1122,6 @@ components:
       description: ID of related media
       schema: 
         type: integer
-        example: 1
 
     Search:
       name: search
