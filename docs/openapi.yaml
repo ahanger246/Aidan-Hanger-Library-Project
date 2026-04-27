@@ -527,6 +527,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/InvalidId'
         '401':
           $ref: '#/components/responses/Unauthenticated'
     
@@ -718,6 +720,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/InvalidId'
         '401':
           $ref: '#/components/responses/Unauthenticated'
     
